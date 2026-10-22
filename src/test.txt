@@ -1,0 +1,108 @@
+#include <Arduino.h>
+#include <std_msgs/msg/int32.h>
+#include "MicroROSHelper.h"
+
+// EJEMPLO: PUBLICACIÓN Y SUSCRIPCIÓN EN EL MISMO NODO
+// Este archivo .txt no se compila. Para probarlo, copie su contenido a main.cpp.
+// El nodo recibe un entero en /entrada y publica el doble en /salida.
+
+// 1. CONFIGURACIÓN: adapte la red y la IP del computador del Agent.
+const size_t ROS_DOMAIN = 13;
+const size_t EXECUTOR_HANDLES = 1; // Solo el subscriber consume un handle.
+char WIFI_SSID[] = "NOMBRE_RED";
+char WIFI_PASSWORD[] = "CLAVE_RED";
+IPAddress AGENT_IP(192, 168, 1, 100);
+const uint16_t AGENT_PORT = 8888;
+const char NODE_NAME[] = "ejemplo_pub_sub";
+
+// 2. MENSAJES: separamos el almacenamiento de recepción y de publicación.
+MicroROSHelper ros;
+std_msgs__msg__Int32 entrada_msg;
+std_msgs__msg__Int32 salida_msg;
+rcl_publisher_t salida_pub;
+rcl_subscription_t entrada_sub;
+
+// 3. CALLBACK: cada mensaje recibido genera una publicación.
+// El nodo cumple ambos papeles durante su ejecución; el callback primero
+// recibe el dato, luego lo procesa y finalmente publica la respuesta.
+void entrada_callback(const void * msgin)
+{
+    if (msgin == nullptr) return;
+
+    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *) msgin;
+
+    // Calcular en 64 bits para comprobar que el doble cabe en un Int32.
+    int64_t resultado = (int64_t) msg->data * 2;
+    if (resultado > INT32_MAX || resultado < INT32_MIN) {
+        ros.info("El doble no cabe en Int32; no se publica respuesta");
+        return;
+    }
+
+    salida_msg.data = (int32_t) resultado;
+    if (!ros.publish(salida_pub, &salida_msg)) {
+        ros.info("Error publicando /salida");
+    }
+}
+
+void setup()
+{
+    // 4. CONEXIÓN: el dominio debe coincidir con ROS_DOMAIN_ID en el computador.
+    bool ok = ros.beginWiFi(
+        NODE_NAME, EXECUTOR_HANDLES, ROS_DOMAIN,
+        WIFI_SSID, WIFI_PASSWORD, AGENT_IP, AGENT_PORT
+    );
+    ros.require(ok, "Error inicializando micro-ROS");
+
+    // Crear el publisher antes de registrar el callback que lo utiliza.
+    ok = ros.createPublisher(
+        salida_pub,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "/salida"
+    );
+    ros.require(ok, "Error creando publisher /salida");
+
+    ok = ros.createSubscription(
+        entrada_sub,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "/entrada", &entrada_msg, entrada_callback
+    );
+    ros.require(ok, "Error creando subscriber /entrada");
+
+    // No hace falta un timer: se publica al recibir cada mensaje.
+    ros.info("Nodo listo: /entrada -> duplicar valor -> /salida");
+}
+
+void loop()
+{
+    if (!ros.wifiConnected()) {
+        ros.info("Se perdio la conexion WiFi");
+        delay(1000);
+        return;
+    }
+
+    // Atender los mensajes recibidos y ejecutar el callback.
+    ros.spinSome(10);
+    delay(10);
+}
+
+/*
+PRUEBA DESDE ROS 2
+Cargue el entorno ROS 2 y configure export ROS_DOMAIN_ID=13 en cada terminal.
+Inicie el Agent antes de arrancar el ESP32:
+    ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
+
+En otra terminal, observe las respuestas antes de enviar datos:
+    ros2 topic echo /salida
+
+En una tercera terminal, envíe un entero:
+    ros2 topic pub --once /entrada std_msgs/msg/Int32 "{data: 7}"
+
+Resultado esperado en /salida:
+    data: 14
+
+También puede enviar datos periódicamente (detener con Ctrl+C):
+    ros2 topic pub --rate 1 /entrada std_msgs/msg/Int32 "{data: 7}"
+
+No se publica nada hasta recibir una entrada válida. Use tópicos diferentes
+para entrada y salida para evitar que el nodo se realimente a sí mismo.
+*/

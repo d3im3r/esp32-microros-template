@@ -1,0 +1,216 @@
+/*
+PLANTILLA PARA INICIAR UN PROYECTO micro-ROS
+
+1. Copie este contenido a src/main.cpp del proyecto PlatformIO.
+2. Conserve include/MicroROSHelper.h y la configuración de dependencias.
+3. Configure platformio.ini para micro-ROS Humble y transporte wifi.
+4. Complete los bloques marcados TODO según su aplicación.
+
+Antes de programar, defina:
+    Información | Tipo de mensaje | Tópico | Publicar/recibir | Frecuencia
+
+Esta base conecta un nodo sin publishers, subscribers ni timers.
+Los fragmentos comentados son ejemplos para completar, no se ejecutan.
+*/
+
+#include <Arduino.h>
+#include "MicroROSHelper.h"
+
+#include <std_msgs/msg/int32.h>
+#include <std_msgs/msg/bool.h>
+
+// =====================================================
+// 1. CONFIGURACIÓN
+// =====================================================
+const size_t ROS_DOMAIN = 13; // Mismo ROS_DOMAIN_ID que en el computador.
+const char NODE_NAME[] = "mi_nodo";
+char WIFI_SSID[] = "NOMBRE_RED";
+char WIFI_PASSWORD[] = "CLAVE_RED";
+IPAddress AGENT_IP(192, 168, 1, 100); // IP del computador que ejecuta el Agent.
+const uint16_t AGENT_PORT = 8888;
+
+// TODO: actualizar al añadir subscribers o timers.
+// Handles = número de subscribers + número de timers.
+// Los publishers no consumen handles por existir.
+const size_t EXECUTOR_HANDLES = 0;
+
+// TODO: declarar pines y períodos de su aplicación.
+// const uint8_t LED_PIN = 2;
+// const uint32_t PERIOD_MS = 1000;
+
+// =====================================================
+// 2. MENSAJES
+// =====================================================
+// TODO: declarar por separado los mensajes de salida y de entrada.
+// Ejemplo: publicar Int32 y recibir Bool.
+// std_msgs__msg__Int32 salida_msg;
+// std_msgs__msg__Bool entrada_msg;
+
+// =====================================================
+// 3. ENTIDADES ROS
+// =====================================================
+MicroROSHelper ros;
+// TODO: habilitar solo las entidades que necesite.
+// rcl_publisher_t salida_pub;
+// rcl_subscription_t entrada_sub;
+// rcl_timer_t timer;
+
+// =====================================================
+// 4. VARIABLES DEL PROGRAMA
+// =====================================================
+// TODO: declarar mediciones, estados y contadores.
+// int32_t valor = 0;
+// bool estado = false;
+
+// =====================================================
+// 5. CALLBACKS
+// =====================================================
+
+// A. SUBSCRIBER: se ejecuta cuando llega un mensaje.
+// El tipo del puntero debe coincidir con el mensaje registrado en setup().
+/*
+void entrada_callback(const void * msgin)
+{
+    if (msgin == nullptr) return;
+    const std_msgs__msg__Bool * msg = (const std_msgs__msg__Bool *) msgin;
+    estado = msg->data;
+
+    // TODO: actuar según el dato recibido.
+    // Si necesita responder, prepare salida_msg y publique aquí.
+}
+*/
+
+// B. TIMER: se ejecuta con el período configurado en setup().
+/*
+void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
+{
+    (void) last_call_time;
+    if (timer == nullptr) return;
+
+    // TODO: leer un sensor o calcular el valor que desea enviar.
+    salida_msg.data = valor;
+    if (!ros.publish(salida_pub, &salida_msg)) {
+        ros.info("Error publicando /salida");
+    }
+}
+*/
+
+// Mantenga los callbacks breves: evite esperas largas y bucles bloqueantes.
+
+// =====================================================
+// 6. FUNCIONES DE HARDWARE Y APLICACIÓN
+// =====================================================
+void configurarHardware()
+{
+    // TODO: configurar pines e inicializar sensores o actuadores.
+    // pinMode(LED_PIN, OUTPUT);
+    // digitalWrite(LED_PIN, LOW);
+}
+
+void actualizarAplicacion()
+{
+    // TODO: ejecutar tareas breves que no dependan de un callback.
+    // Puede dejar esta función vacía si toda su lógica utiliza callbacks.
+}
+
+// =====================================================
+// 7. SETUP: INICIALIZACIÓN, SE EJECUTA UNA VEZ
+// =====================================================
+void setup()
+{
+    configurarHardware();
+
+    // A. Inicializar transporte, dominio, nodo y executor.
+    bool ok = ros.beginWiFi(
+        NODE_NAME, EXECUTOR_HANDLES, ROS_DOMAIN,
+        WIFI_SSID, WIFI_PASSWORD, AGENT_IP, AGENT_PORT
+    );
+    ros.require(ok, "Error inicializando micro-ROS");
+
+    // B. Crear publishers antes de los callbacks que los utilizan.
+    /*
+    ok = ros.createPublisher(
+        salida_pub,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "/salida"
+    );
+    ros.require(ok, "Error creando publisher");
+    */
+
+    // C. Crear subscribers: tópico, mensaje receptor y callback.
+    /*
+    ok = ros.createSubscription(
+        entrada_sub,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Bool),
+        "/entrada", &entrada_msg, entrada_callback
+    );
+    ros.require(ok, "Error creando subscriber");
+    */
+
+    // D. Crear timers solo si necesita acciones periódicas.
+    // Si publica únicamente al recibir mensajes, no necesita un timer.
+    /*
+    ok = ros.createTimer(timer, PERIOD_MS, timer_callback);
+    ros.require(ok, "Error creando timer");
+    */
+
+    ros.info("Nodo listo");
+}
+
+// =====================================================
+// 8. LOOP: EJECUCIÓN CONTINUA
+// =====================================================
+void loop()
+{
+    // Comprobación básica; no reconstruye la sesión si el Agent se reinicia.
+    if (!ros.wifiConnected()) {
+        ros.info("Se perdio la conexion WiFi");
+        delay(1000);
+        return;
+    }
+
+    // Atender mensajes y timers; después ejecutar otras tareas breves.
+    ros.spinSome(10);
+    actualizarAplicacion();
+    delay(10);
+}
+
+/*
+GUÍA PARA COMPLETAR LA PLANTILLA
+
+Solo publicación periódica:
+    Habilitar Int32, salida_msg, salida_pub, valor, PERIOD_MS,
+    timer y timer_callback. Habilitar bloques B y D. Handles = 1.
+
+Solo recepción de Bool:
+    Habilitar Bool, entrada_msg, entrada_sub, estado y entrada_callback.
+    Habilitar bloque C. Handles = 1.
+
+Publicación periódica + recepción de Bool:
+    Habilitar ambos casos anteriores. Handles = 2.
+
+Publicación como respuesta:
+    Habilitar publisher y subscriber; publicar dentro de entrada_callback.
+    No necesita timer. Handles = 1.
+
+PRUEBA EN EL COMPUTADOR
+En cada terminal, cargue el entorno ROS 2 y configure el dominio elegido:
+    source /opt/ros/humble/setup.bash
+    export ROS_DOMAIN_ID=13
+
+Con el paquete del Agent disponible, iniciarlo antes de arrancar el ESP32:
+    ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
+
+En otra terminal:
+    ros2 node list
+    ros2 topic list -t
+
+Si habilitó los ejemplos anteriores, observar la salida:
+    ros2 topic echo /salida
+
+Desde otra terminal, enviar la entrada:
+    ros2 topic pub --once /entrada std_msgs/msg/Bool "{data: true}"
+
+Compile y cargue desde PlatformIO IDE en VS Code: Build -> Upload -> Monitor.
+No publique contraseñas reales en el repositorio.
+*/
