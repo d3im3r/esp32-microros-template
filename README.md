@@ -74,6 +74,18 @@ git clone https://github.com/d3im3r/esp32-microros-template.git
 cd esp32-microros-template
 ```
 
+**Optional: start your own repository without the template's Git history.** From inside the cloned `esp32-microros-template` folder, remove `.git`:
+
+```bash
+rm -rf .git
+```
+
+This removes the local commit history, branches, and remote configuration while keeping the project files. It does not change the original GitHub repository. To begin a new history:
+
+```bash
+git init -b main
+```
+
 1. In VS Code, open **Extensions** (`Ctrl+Shift+X`) and install **PlatformIO IDE**.
 2. Select **File → Open Folder** and open the cloned repository root containing `platformio.ini`.
 3. Allow PlatformIO to prepare the environment.
@@ -300,13 +312,13 @@ The executor services one subscription and one timer. The publisher sends from t
 
 ### 1. Start from the Skeleton
 
-Copy [examples/template_main.cpp.txt](examples/template_main.cpp.txt) into `src/main.cpp` to replace the counter/LED example. The skeleton initializes a node with **zero executor handles** and contains commented examples for adding entities. `.txt` examples are not compiled.
+Copy [examples/template_main.cpp.txt](examples/template_main.cpp.txt) into `src/main.cpp` to replace the counter/LED example. The skeleton initializes a node with **zero executor handles** and provides placeholders for your application logic. `.txt` examples are not compiled.
 
 1. Choose your message types, topic names, data directions, and update periods.
 2. Declare input and output messages separately.
 3. Add the publishers, subscriptions, and timers you need.
 4. Implement hardware setup and brief callbacks.
-5. Enable the corresponding entity-creation blocks in `setup()`.
+5. Create the required entities in `setup()` and check their initialization results.
 6. Set the executor handle count and validate with the Agent.
 
 ### Available Examples
@@ -315,7 +327,7 @@ Copy the contents of one example into `src/main.cpp`, configure its WiFi credent
 
 | Example | Behavior | Handles |
 | --- | --- | :---: |
-| [template_main.cpp.txt](examples/template_main.cpp.txt) | Node skeleton with commented entity examples | `0` |
+| [template_main.cpp.txt](examples/template_main.cpp.txt) | Minimal node skeleton with application placeholders | `0` |
 | [publisher.cpp.txt](examples/publisher.cpp.txt) | Publish `/contador` (`Int32`) at approximately 1 Hz | `1` |
 | [subscriber.cpp.txt](examples/subscriber.cpp.txt) | Receive `/led` (`Bool`) to control GPIO 2 | `1` |
 | [publisher_subscriber.cpp.txt](examples/publisher_subscriber.cpp.txt) | Receive `/entrada` (`Int32`), publish twice its value on `/salida` | `1` |
