@@ -44,7 +44,7 @@ The included example runs a node named `mi_nodo`. It publishes an integer counte
 | Component | Purpose | File |
 | --- | --- | --- |
 | Working example | Publish a counter and receive LED commands | [src/main.cpp](src/main.cpp) |
-| Application skeleton | Start a node and add your own ROS entities | [src/skeleton.txt](src/skeleton.txt) |
+| Application skeleton | Start a node and add your own ROS entities | [examples/template_main.cpp.txt](examples/template_main.cpp.txt) |
 | Reusable helper | Initialize transport, domain, node, executor, and entities | [include/MicroROSHelper.h](include/MicroROSHelper.h) |
 | PlatformIO environment | Configure the board, framework, and dependencies | [platformio.ini](platformio.ini) |
 
@@ -118,7 +118,7 @@ ip route
 Choose the interface connected to the ESP32 network. Do not use a loopback address such as `127.0.0.1` or copy a network suffix such as `/24` into `IPAddress`.
 
 > [!IMPORTANT]
-> Keep real WiFi credentials out of published files. Review both `src/main.cpp` and `src/test.txt` before committing network configuration.
+> Keep real WiFi credentials out of published files. Review `src/main.cpp` and the files in `examples/` before committing network configuration.
 
 ### 2.3. PlatformIO Configuration
 
@@ -300,7 +300,7 @@ The executor services one subscription and one timer. The publisher sends from t
 
 ### 1. Start from the Skeleton
 
-Copy [src/skeleton.txt](src/skeleton.txt) into `src/main.cpp` to replace the counter/LED example. The skeleton initializes a node with **zero executor handles** and contains commented examples for adding entities. `.txt` examples are not compiled.
+Copy [examples/template_main.cpp.txt](examples/template_main.cpp.txt) into `src/main.cpp` to replace the counter/LED example. The skeleton initializes a node with **zero executor handles** and contains commented examples for adding entities. `.txt` examples are not compiled.
 
 1. Choose your message types, topic names, data directions, and update periods.
 2. Declare input and output messages separately.
@@ -308,6 +308,19 @@ Copy [src/skeleton.txt](src/skeleton.txt) into `src/main.cpp` to replace the cou
 4. Implement hardware setup and brief callbacks.
 5. Enable the corresponding entity-creation blocks in `setup()`.
 6. Set the executor handle count and validate with the Agent.
+
+### Available Examples
+
+Copy the contents of one example into `src/main.cpp`, configure its WiFi credentials and Agent IP, then build and upload. Keep `MicroROSHelper.h` and the existing PlatformIO dependencies.
+
+| Example | Behavior | Handles |
+| --- | --- | :---: |
+| [template_main.cpp.txt](examples/template_main.cpp.txt) | Node skeleton with commented entity examples | `0` |
+| [publisher.cpp.txt](examples/publisher.cpp.txt) | Publish `/contador` (`Int32`) at approximately 1 Hz | `1` |
+| [subscriber.cpp.txt](examples/subscriber.cpp.txt) | Receive `/led` (`Bool`) to control GPIO 2 | `1` |
+| [publisher_subscriber.cpp.txt](examples/publisher_subscriber.cpp.txt) | Receive `/entrada` (`Int32`), publish twice its value on `/salida` | `1` |
+
+The combined example publishes from the subscription callback and needs no timer. Values whose double would exceed the `Int32` range are rejected. Each example includes ROS 2 commands for manual verification.
 
 ### 2. Calculate Executor Handles
 
@@ -398,9 +411,12 @@ esp32-microros-template/
 ├── include/
 │   └── MicroROSHelper.h         # Reusable micro-ROS infrastructure
 ├── src/
-│   ├── main.cpp                 # Counter/LED firmware compiled by PlatformIO
-│   ├── skeleton.txt             # Starting point for custom applications
-│   └── test.txt                 # Auxiliary example; not compiled
+│   └── main.cpp                 # Counter/LED firmware compiled by PlatformIO
+├── examples/                    # Copy one example into src/main.cpp to use it
+│   ├── template_main.cpp.txt    # Starting point for custom applications
+│   ├── publisher.cpp.txt        # Publish an Int32 counter at 1 Hz
+│   ├── subscriber.cpp.txt       # Receive Bool commands for the LED
+│   └── publisher_subscriber.cpp.txt # Receive an Int32 and publish its double
 ├── lib/                         # Custom libraries
 └── test/                        # Test directory; no implemented tests yet
 ```

@@ -1,0 +1,72 @@
+// Copie este archivo a src/main.cpp y configure la red antes de compilar.
+// Conserve include/MicroROSHelper.h y el transporte wifi en platformio.ini.
+#include <Arduino.h>
+#include "MicroROSHelper.h"
+#include <std_msgs/msg/int32.h>
+
+const size_t ROS_DOMAIN = 13;
+const size_t EXECUTOR_HANDLES = 1;
+char WIFI_SSID[] = "NOMBRE_RED";
+char WIFI_PASSWORD[] = "CLAVE_RED";
+IPAddress AGENT_IP(192, 168, 1, 100);
+const uint16_t AGENT_PORT = 8888;
+const char NODE_NAME[] = "ejemplo_publisher";
+const uint32_t PERIOD_MS = 1000;
+
+// Un timer consume un handle; el publisher no consume handles.
+MicroROSHelper ros;
+std_msgs__msg__Int32 contador_msg;
+rcl_publisher_t contador_pub;
+rcl_timer_t contador_timer;
+int32_t contador = 0;
+
+void contador_callback(rcl_timer_t * timer, int64_t last_call_time)
+{
+    (void) last_call_time;
+    if (timer == nullptr) return;
+    contador = (contador == INT32_MAX) ? 0 : contador + 1;
+    contador_msg.data = contador;
+    if (!ros.publish(contador_pub, &contador_msg)) {
+        ros.info("Error publicando /contador");
+    }
+}
+
+void setup()
+{
+    bool ok = ros.beginWiFi(
+        NODE_NAME, EXECUTOR_HANDLES, ROS_DOMAIN,
+        WIFI_SSID, WIFI_PASSWORD, AGENT_IP, AGENT_PORT
+    );
+    ros.require(ok, "Error inicializando micro-ROS");
+    ok = ros.createPublisher(
+        contador_pub,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "/contador"
+    );
+    ros.require(ok, "Error creando publisher /contador");
+    ok = ros.createTimer(contador_timer, PERIOD_MS, contador_callback);
+    ros.require(ok, "Error creando timer");
+    ros.info("Nodo listo");
+}
+
+void loop()
+{
+    if (!ros.wifiConnected()) {
+        delay(1000);
+        return;
+    }
+    ros.spinSome(10);
+    delay(10);
+}
+
+/*
+PRUEBA DESDE ROS 2
+En cada terminal:
+    source /opt/ros/humble/setup.bash
+    export ROS_DOMAIN_ID=13
+Inicie el Agent antes de arrancar el ESP32:
+    ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
+En otra terminal:
+    ros2 topic echo /contador
+    // Valores esperados: 1, 2, 3, ... a aproximadamente 1 Hz.
+*/
