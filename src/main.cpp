@@ -9,7 +9,7 @@ const size_t ROS_DOMAIN = 13;
 const size_t EXECUTOR_HANDLES = 2; // 1 subscriber + 1 timer.
 char WIFI_SSID[] = "NOMBRE_RED";
 char WIFI_PASSWORD[] = "CLAVE_RED";
-IPAddress AGENT_IP(192, 168, 1, 21);
+IPAddress AGENT_IP(10,41,3,65);
 const uint16_t AGENT_PORT = 8888;
 const char NODE_NAME[] = "mi_nodo";
 
