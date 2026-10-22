@@ -419,7 +419,6 @@ esp32-microros-template/
 ├── README.md                    # Project presentation and usage guide
 ├── platformio.ini               # Board, framework, transport, and dependencies
 ├── .gitignore                   # Current Git tracking rules
-├── .vscode/                     # Editor and PlatformIO configuration
 ├── include/
 │   └── MicroROSHelper.h         # Reusable micro-ROS infrastructure
 ├── src/
@@ -433,7 +432,7 @@ esp32-microros-template/
 └── test/                        # Test directory; no implemented tests yet
 ```
 
-PlatformIO stores downloaded project dependencies and build artifacts in `.pio/`. The current `.gitignore` defines no exclusion rules, so `.pio/` and `.vscode/` are not excluded by that file.
+PlatformIO stores downloaded project dependencies and build artifacts in `.pio/`. The current `.gitignore` excludes local editor settings in `.vscode/`; `.pio/` is not excluded by that file.
 
 ---
 
