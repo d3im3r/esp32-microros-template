@@ -9,6 +9,7 @@
 ![PlatformIO](https://img.shields.io/badge/Build-PlatformIO-F5822A?logo=platformio&logoColor=white)
 ![Arduino](https://img.shields.io/badge/Framework-Arduino-00979D?logo=arduino&logoColor=white)
 ![WiFi UDP](https://img.shields.io/badge/micro--ROS-WiFi_UDP-0078D4)
+[![License Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 <p>
 An educational starting point for <b>ESP32 applications connected to ROS 2 Humble</b> through micro-ROS. A reusable helper handles initialization so you can focus on messages, callbacks, sensors, and actuators.
@@ -32,7 +33,7 @@ An educational starting point for <b>ESP32 applications connected to ROS 2 Humbl
 10. [Repository Structure](#repository-structure)
 11. [Troubleshooting](#troubleshooting)
 12. [Current Scope](#current-scope)
-13. [Author and Contributions](#author-and-contributions)
+13. [Author, Institution, and License](#author-and-contributions)
 
 ---
 
@@ -57,7 +58,8 @@ The example counter starts at `1`, increases on each timer callback, and returns
 
 - An ESP32 board compatible with the `denky32` environment, or an adjusted PlatformIO board configuration.
 - A USB data cable.
-- Visual Studio Code with **PlatformIO IDE** installed.
+- Visual Studio Code with **PlatformIO IDE already installed and configured**. This guide assumes a working PlatformIO environment.
+- Git available for cloning the template.
 - A computer with **ROS 2 Humble** and an available `micro_ros_agent` package.
 - A **2.4 GHz WiFi network** allowing communication between the ESP32 and the Agent computer.
 - Internet access for the first dependency download.
@@ -69,27 +71,23 @@ The Agent is a separate program on the computer. PlatformIO builds the ESP32 cli
 <a id="step-1-download-and-open-the-project"></a>
 ## 📥 Step 1: Download and Open the Project
 
+Clone the template and **remove its Git metadata before starting your own project**. Run these commands in order; `rm -rf .git` must run inside the newly cloned folder:
+
 ```bash
 git clone https://github.com/d3im3r/esp32-microros-template.git
 cd esp32-microros-template
-```
-
-**Optional: start your own repository without the template's Git history.** From inside the cloned `esp32-microros-template` folder, remove `.git`:
-
-```bash
 rm -rf .git
 ```
 
-This removes the local commit history, branches, and remote configuration while keeping the project files. It does not change the original GitHub repository. To begin a new history:
+Removing `.git` is a required step in this template workflow. It deletes the clone's commit history, branches, and remote configuration while preserving the project files, license, and attribution. It does not modify the original GitHub repository.
+
+If you want to track your application in a new repository, initialize a fresh history:
 
 ```bash
 git init -b main
 ```
 
-1. In VS Code, open **Extensions** (`Ctrl+Shift+X`) and install **PlatformIO IDE**.
-2. Select **File → Open Folder** and open the cloned repository root containing `platformio.ini`.
-3. Allow PlatformIO to prepare the environment.
-4. Locate **PlatformIO → PROJECT TASKS → denky32** in the sidebar.
+Open the cloned folder containing `platformio.ini` in your configured PlatformIO environment.
 
 ---
 
@@ -132,21 +130,13 @@ Choose the interface connected to the ESP32 network. Do not use a loopback addre
 > [!IMPORTANT]
 > Keep real WiFi credentials out of published files. Review `src/main.cpp` and the files in `examples/` before committing network configuration.
 
-### 2.3. PlatformIO Configuration
+### 2.3. Included Build Environment
 
-The current environment uses:
+[platformio.ini](platformio.ini) already defines `denky32`, the Arduino framework, micro-ROS Humble, WiFi transport, and a serial monitor speed of `115200` baud. Use this environment for a compatible board.
 
-```ini
-[env:denky32]
-platform = espressif32
-board = denky32
-framework = arduino
-monitor_speed = 115200
-board_microros_transport = wifi
-board_microros_distro = humble
-```
+The micro-ROS client library is provided locally in `lib/micro_ros_platformio/`. Its Git URL in `lib_deps` is currently commented out. Keep the local library directory: it supplies the transport implementation and micro-ROS build integration.
 
-Keep the `lib_deps` section from [platformio.ini](platformio.ini). It includes micro-ROS and Adafruit libraries for displays and sensors. The counter/LED example does not use those Adafruit peripherals.
+The active `lib_deps` entries provide Adafruit display and sensor libraries for extensions. The counter/LED example does not use those peripherals.
 
 ---
 
@@ -327,12 +317,12 @@ Copy the contents of one example into `src/main.cpp`, configure its WiFi credent
 
 | Example | Behavior | Handles |
 | --- | --- | :---: |
-| [template_main.cpp.txt](examples/template_main.cpp.txt) | Minimal node skeleton with application placeholders | `0` |
+| [template_main.cpp.txt](examples/template_main.cpp.txt) | Brief student guide with numbered steps and application placeholders | `0` |
 | [publisher.cpp.txt](examples/publisher.cpp.txt) | Publish `/contador` (`Int32`) at approximately 1 Hz | `1` |
 | [subscriber.cpp.txt](examples/subscriber.cpp.txt) | Receive `/led` (`Bool`) to control GPIO 2 | `1` |
 | [publisher_subscriber.cpp.txt](examples/publisher_subscriber.cpp.txt) | Receive `/entrada` (`Int32`), publish twice its value on `/salida` | `1` |
 
-The combined example publishes from the subscription callback and needs no timer. Values whose double would exceed the `Int32` range are rejected. Each example includes ROS 2 commands for manual verification.
+The combined example publishes from the subscription callback and needs no timer. Values whose double would exceed the `Int32` range are rejected. The template includes node-discovery checks; the other examples include topic commands for manual verification.
 
 ### 2. Calculate Executor Handles
 
@@ -417,6 +407,7 @@ The Agent uses the serial port exclusively. Helper diagnostic prints are disable
 ```text
 esp32-microros-template/
 ├── README.md                    # Project presentation and usage guide
+├── LICENSE                      # Apache License 2.0
 ├── platformio.ini               # Board, framework, transport, and dependencies
 ├── .gitignore                   # Current Git tracking rules
 ├── include/
@@ -428,11 +419,19 @@ esp32-microros-template/
 │   ├── publisher.cpp.txt        # Publish an Int32 counter at 1 Hz
 │   ├── subscriber.cpp.txt       # Receive Bool commands for the LED
 │   └── publisher_subscriber.cpp.txt # Receive an Int32 and publish its double
-├── lib/                         # Custom libraries
-└── test/                        # Test directory; no implemented tests yet
+└── lib/
+    └── micro_ros_platformio/    # Local third-party micro-ROS library
+        ├── library.json         # PlatformIO library metadata
+        ├── extra_script.py      # micro-ROS build integration
+        ├── platform_code/       # Transport implementations
+        ├── microros_utils/      # Build utilities
+        ├── metas/               # micro-ROS build profiles
+        ├── LICENSE              # Upstream license
+        ├── NOTICE               # Upstream attribution
+        └── ...                  # Upstream documentation, examples, and CI
 ```
 
-PlatformIO stores downloaded project dependencies and build artifacts in `.pio/`. The current `.gitignore` excludes local editor settings in `.vscode/`; `.pio/` is not excluded by that file.
+The tree shows the project files and the main parts of the bundled library. The local `test/` directory is empty and contains no implemented tests. PlatformIO stores downloaded project dependencies and build artifacts in `.pio/`. The current `.gitignore` excludes local editor settings in `.vscode/`; `.pio/` is not excluded by that file.
 
 ---
 
@@ -467,9 +466,17 @@ PlatformIO stores downloaded project dependencies and build artifacts in `.pio/`
 ---
 
 <a id="author-and-contributions"></a>
-## 👤 Author and Contributions
+## 👤 Author, Institution, and License
 
-**Deimer Miranda Montoya** — [@d3im3r](https://github.com/d3im3r)
+**Deimer Miranda Montoya, MSc.(c)** — demiranda@unal.edu.co / deimer_miranda91162@elpoli.edu.co
+
+**Institution:** Politécnico Colombiano Jaime Isaza Cadavid — Faculty of Engineering
+
+**License:** [Apache License 2.0](LICENSE)
+
+The bundled `lib/micro_ros_platformio/` library retains its upstream [LICENSE](lib/micro_ros_platformio/LICENSE), [NOTICE](lib/micro_ros_platformio/NOTICE), and [third-party license information](lib/micro_ros_platformio/3rd-party-licenses.txt).
+
+### Contributions
 
 To report a problem or propose an improvement, include your board model, relevant configuration, reproduction steps, and build or monitor output. For firmware changes, describe the build result and any checks performed with the Agent and ROS 2 topics. Remove credentials from shared logs and examples.
 
