@@ -37837,63 +37837,62 @@ LOAD /home/d3im3r/.platformio/packages/toolchain-xtensa-esp32/bin/../lib/gcc/xte
                 0x000000003ffbdb68        0xa .pio/build/denky32/src/main.cpp.o
                 0x000000003ffbdb68                WIFI_PASSWORD
  .data.WIFI_SSID
-                0x000000003ffbdb72        0x7 .pio/build/denky32/src/main.cpp.o
+                0x000000003ffbdb72        0xb .pio/build/denky32/src/main.cpp.o
                 0x000000003ffbdb72                WIFI_SSID
  .data._ZZN16WiFiGenericClass14_eventCallbackEP15arduino_event_tE13first_connect
-                0x000000003ffbdb79        0x1 .pio/build/denky32/lib98e/libWiFi.a(WiFiGeneric.cpp.o)
- *fill*         0x000000003ffbdb7a        0x2 
+                0x000000003ffbdb7d        0x1 .pio/build/denky32/lib98e/libWiFi.a(WiFiGeneric.cpp.o)
+ *fill*         0x000000003ffbdb7e        0x2 
  .data._ZN16WiFiGenericClass13_sleepEnabledE
-                0x000000003ffbdb7c        0x4 .pio/build/denky32/lib98e/libWiFi.a(WiFiGeneric.cpp.o)
-                0x000000003ffbdb7c                _ZN16WiFiGenericClass13_sleepEnabledE
+                0x000000003ffbdb80        0x4 .pio/build/denky32/lib98e/libWiFi.a(WiFiGeneric.cpp.o)
+                0x000000003ffbdb80                _ZN16WiFiGenericClass13_sleepEnabledE
  .data._ZN16WiFiGenericClass11_persistentE
-                0x000000003ffbdb80        0x1 .pio/build/denky32/lib98e/libWiFi.a(WiFiGeneric.cpp.o)
-                0x000000003ffbdb80                _ZN16WiFiGenericClass11_persistentE
- *fill*         0x000000003ffbdb81        0x3 
+                0x000000003ffbdb84        0x1 .pio/build/denky32/lib98e/libWiFi.a(WiFiGeneric.cpp.o)
+                0x000000003ffbdb84                _ZN16WiFiGenericClass11_persistentE
+ *fill*         0x000000003ffbdb85        0x3 
  .data._ZL11_sta_status
-                0x000000003ffbdb84        0x4 .pio/build/denky32/lib98e/libWiFi.a(WiFiSTA.cpp.o)
- .data._ZN12WiFiSTAClass12_minSecurityE
                 0x000000003ffbdb88        0x4 .pio/build/denky32/lib98e/libWiFi.a(WiFiSTA.cpp.o)
-                0x000000003ffbdb88                _ZN12WiFiSTAClass12_minSecurityE
+ .data._ZN12WiFiSTAClass12_minSecurityE
+                0x000000003ffbdb8c        0x4 .pio/build/denky32/lib98e/libWiFi.a(WiFiSTA.cpp.o)
+                0x000000003ffbdb8c                _ZN12WiFiSTAClass12_minSecurityE
  .data._ZN12WiFiSTAClass14_autoReconnectE
-                0x000000003ffbdb8c        0x1 .pio/build/denky32/lib98e/libWiFi.a(WiFiSTA.cpp.o)
-                0x000000003ffbdb8c                _ZN12WiFiSTAClass14_autoReconnectE
- *fill*         0x000000003ffbdb8d        0x3 
+                0x000000003ffbdb90        0x1 .pio/build/denky32/lib98e/libWiFi.a(WiFiSTA.cpp.o)
+                0x000000003ffbdb90                _ZN12WiFiSTAClass14_autoReconnectE
+ *fill*         0x000000003ffbdb91        0x3 
  .data._uart_bus_array
-                0x000000003ffbdb90       0x60 .pio/build/denky32/libFrameworkArduino.a(esp32-hal-uart.c.o)
+                0x000000003ffbdb94       0x60 .pio/build/denky32/libFrameworkArduino.a(esp32-hal-uart.c.o)
  .data.gpio_context
-                0x000000003ffbdbf0       0x18 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(gpio.c.obj)
+                0x000000003ffbdbf4       0x18 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(gpio.c.obj)
  .data._gpio_hal
-                0x000000003ffbdc08        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(gpio.c.obj)
+                0x000000003ffbdc0c        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(gpio.c.obj)
  .data.s_rtc_isr_handler_list_lock
-                0x000000003ffbdc10        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(rtc_module.c.obj)
-                0x000000003ffbdc10                s_rtc_isr_handler_list_lock
+                0x000000003ffbdc14        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(rtc_module.c.obj)
+                0x000000003ffbdc14                s_rtc_isr_handler_list_lock
  .data.rtc_spinlock
-                0x000000003ffbdc18        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(rtc_module.c.obj)
-                0x000000003ffbdc18                rtc_spinlock
+                0x000000003ffbdc1c        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(rtc_module.c.obj)
+                0x000000003ffbdc1c                rtc_spinlock
  .data.uart_selectlock
-                0x000000003ffbdc20        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(uart.c.obj)
+                0x000000003ffbdc24        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(uart.c.obj)
  .data.uart_context
-                0x000000003ffbdc28       0x30 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(uart.c.obj)
+                0x000000003ffbdc2c       0x30 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(uart.c.obj)
  .data.periph_spinlock
-                0x000000003ffbdc58        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(periph_ctrl.c.obj)
+                0x000000003ffbdc5c        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libdriver.a(periph_ctrl.c.obj)
  .data.first_call$3832
-                0x000000003ffbdc60        0x1 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libapp_update.a(esp_app_desc.c.obj)
- *fill*         0x000000003ffbdc61        0x3 
+                0x000000003ffbdc64        0x1 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libapp_update.a(esp_app_desc.c.obj)
+ *fill*         0x000000003ffbdc65        0x3 
  .data.esp_flash_registered_chips
-                0x000000003ffbdc64        0x4 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/libspi_flash.a(spi_flash_chip_drivers.c.obj)
-                0x000000003ffbdc64                esp_flash_registered_chips
+                0x000000003ffbdc68        0x4 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/libspi_flash.a(spi_flash_chip_drivers.c.obj)
+                0x000000003ffbdc68                esp_flash_registered_chips
  .data.default_registered_chips
-                0x000000003ffbdc68       0x18 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/libspi_flash.a(spi_flash_chip_drivers.c.obj)
+                0x000000003ffbdc6c       0x18 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/libspi_flash.a(spi_flash_chip_drivers.c.obj)
  .data.s_flash_op_cpu
-                0x000000003ffbdc80        0x4 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/libspi_flash.a(cache_utils.c.obj)
+                0x000000003ffbdc84        0x4 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/libspi_flash.a(cache_utils.c.obj)
  .data.pthread_lazy_init_lock
-                0x000000003ffbdc84        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libpthread.a(pthread.c.obj)
-                0x000000003ffbdc84                pthread_lazy_init_lock
+                0x000000003ffbdc88        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libpthread.a(pthread.c.obj)
+                0x000000003ffbdc88                pthread_lazy_init_lock
  .data.s_keys_lock
-                0x000000003ffbdc8c        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libpthread.a(pthread_local_storage.c.obj)
+                0x000000003ffbdc90        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libpthread.a(pthread_local_storage.c.obj)
  .data.twdt_spinlock
-                0x000000003ffbdc94        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libesp_system.a(task_wdt.c.obj)
- *fill*         0x000000003ffbdc9c        0x4 
+                0x000000003ffbdc98        0x8 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libesp_system.a(task_wdt.c.obj)
  .data          0x000000003ffbdca0       0x38 /home/d3im3r/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/lib/libesp_system.a(highint_hdl.S.obj)
                 0x000000003ffbdcc0                _lx_intr_livelock_counter
                 0x000000003ffbdcc4                _lx_intr_livelock_max
